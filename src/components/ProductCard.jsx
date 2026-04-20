@@ -60,10 +60,10 @@ export default function ProductCard({ product, addToCart }) {
                     {product.name}
                 </h3>
                 <div className="flex items-center justify-start gap-2 md:gap-3 mb-2 md:mb-0">
-                    <span className="text-xs md:text-sm font-black text-black">{product.price} ج.م</span>
+                    <span className="text-xs md:text-sm font-black text-black">{product.price} د.ك</span>
                     {/* التعديل: old_price بدلاً من oldPrice */}
                     {product.old_price && (
-                        <span className="text-[9px] md:text-xs text-gray-400 line-through">{product.old_price} ج.م</span>
+                        <span className="text-[9px] md:text-xs text-gray-400 line-through">{product.old_price} د.ك</span>
                     )}
                 </div>
             </Link>
