@@ -54,7 +54,7 @@ export default function CartDrawer({ cart, removeFromCart, isCartOpen, setIsCart
                                     <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">
                                         Size: <span className="text-black">{item.selectedSize}</span>
                                     </p>
-                                    <p className="font-extrabold text-base text-black mt-2">{item.price} ج.م</p>
+                                    <p className="font-extrabold text-base text-black mt-2">{item.price} د.ك</p>
                                 </div>
                                 <button
                                     onClick={() => removeFromCart(index)}
@@ -92,24 +92,24 @@ export default function CartDrawer({ cart, removeFromCart, isCartOpen, setIsCart
                                 </button>
                             </div>
                             {couponError && <p className="text-[10px] text-red-500 font-bold mt-2">{couponError}</p>}
-                            {appliedCoupon && <p className="text-[10px] text-green-600 font-bold mt-2 flex items-center gap-1"><CheckCircle size={12}/> تم تطبيق خصم {appliedCoupon.discount_amount} ج.م</p>}
+                            {appliedCoupon && <p className="text-[10px] text-green-600 font-bold mt-2 flex items-center gap-1"><CheckCircle size={12}/> تم تطبيق خصم {appliedCoupon.discount_amount} د.ك</p>}
                         </div>
 
                         {/* ملخص الحساب */}
                         <div className="space-y-2">
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-400 font-bold text-xs uppercase tracking-widest">Subtotal:</span>
-                                <span className={`font-bold ${appliedCoupon ? 'line-through text-gray-300' : 'text-black'}`}>{cartTotal} ج.م</span>
+                                <span className={`font-bold ${appliedCoupon ? 'line-through text-gray-300' : 'text-black'}`}>{cartTotal} د.ك</span>
                             </div>
                             {appliedCoupon && (
                                 <div className="flex justify-between items-center text-green-600 font-bold">
                                     <span className="text-xs uppercase tracking-widest">Discount:</span>
-                                    <span>-{appliedCoupon.discount_amount} ج.م</span>
+                                    <span>-{appliedCoupon.discount_amount} د.ك</span>
                                 </div>
                             )}
                             <div className="flex justify-between items-center border-t border-gray-100 pt-3 mt-2">
                                 <span className="text-black font-black text-sm uppercase tracking-widest">Total:</span>
-                                <span className="text-3xl font-extrabold text-gray-950 tracking-tight">{finalTotal} ج.م</span>
+                                <span className="text-3xl font-extrabold text-gray-950 tracking-tight">{finalTotal} د.ك</span>
                             </div>
                         </div>
 
