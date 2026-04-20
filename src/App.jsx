@@ -146,7 +146,7 @@ export default function App() {
 
       const cartTotal = cart.reduce((total, item) => total + item.price, 0);
       if (data.min_order_amount && cartTotal < data.min_order_amount) {
-        setCouponError(`الحد الأدنى لاستخدام الكود هو ${data.min_order_amount} ج.م`);
+        setCouponError(`الحد الأدنى لاستخدام الكود هو ${data.min_order_amount} د.ك`);
         return;
       }
 
@@ -170,7 +170,7 @@ export default function App() {
     }
 
     // تجميع أسماء المنتجات لتظهر في الرسالة
-    const itemsList = orderData.items.map(item => `- ${item.name} (مقاس: ${item.selectedSize}) | السعر: ${item.price} ج.م`).join('\n');
+    const itemsList = orderData.items.map(item => `- ${item.name} (مقاس: ${item.selectedSize}) | السعر: ${item.price} د.ك`).join('\n');
 
     const message = `
 🛍️ *طلب جديد من متجر الصفا!* 🛍️
@@ -183,8 +183,8 @@ export default function App() {
 📦 *تفاصيل المنتجات:*
 ${itemsList}
 
-💰 *إجمالي الطلب:* ${orderData.total_amount} ج.م
-${orderData.coupon_code ? `🏷️ *كوبون مستخدم:* ${orderData.coupon_code} (خصم ${orderData.discount_amount} ج.م)` : ''}
+💰 *إجمالي الطلب:* ${orderData.total_amount} د.ك
+${orderData.coupon_code ? `🏷️ *كوبون مستخدم:* ${orderData.coupon_code} (خصم ${orderData.discount_amount} د.ك)` : ''}
 📝 *ملاحظات:* ${orderData.notes || 'لا يوجد'}
 
 🔗 *لمراجعة التفاصيل، يرجى فتح لوحة التحكم.*
