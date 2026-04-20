@@ -36,7 +36,7 @@ export default function App() {
         let fetchedCategories = [];
 
         try {
-          // 1. المحاولة الأولى: سحب البيانات بسرعة الصاروخ من ملفات Netlify
+          // 1. المحاولة الأولى: سحب البيانات بسرعة الصاروخ من ملفات Netlify/Vercel
           const [prodRes, catRes] = await Promise.all([
             fetch('/products.json').then(res => res.ok ? res.json() : null),
             fetch('/categories.json').then(res => res.ok ? res.json() : null)
@@ -158,6 +158,56 @@ export default function App() {
     }
   };
 
+  // 🤖 دالة إرسال الإشعار لتليجرام
+  const sendTelegramNotification = async (orderData) => {
+    // جلب المتغيرات من Vercel (ملاحظة: إذا كنت تختبر على جهازك تأكد من إضافتها لملف .env)
+    const botToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+    const chatId = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+
+    if (!botToken || !chatId) {
+      console.warn("تنبيه: إعدادات بوت التليجرام مفقودة.");
+      return;
+    }
+
+    // تجميع أسماء المنتجات لتظهر في الرسالة
+    const itemsList = orderData.items.map(item => `- ${item.name} (مقاس: ${item.selectedSize}) | السعر: ${item.price} ج.م`).join('\n');
+
+    const message = `
+🛍️ *طلب جديد من متجر الصفا!* 🛍️
+
+👤 *اسم العميل:* ${orderData.customer_name}
+📞 *رقم الهاتف:* ${orderData.phone}
+📞 *رقم بديل:* ${orderData.customer_phone_2 || 'لا يوجد'}
+📍 *العنوان:* ${orderData.address}
+
+📦 *تفاصيل المنتجات:*
+${itemsList}
+
+💰 *إجمالي الطلب:* ${orderData.total_amount} ج.م
+${orderData.coupon_code ? `🏷️ *كوبون مستخدم:* ${orderData.coupon_code} (خصم ${orderData.discount_amount} ج.م)` : ''}
+📝 *ملاحظات:* ${orderData.notes || 'لا يوجد'}
+
+🔗 *لمراجعة التفاصيل، يرجى فتح لوحة التحكم.*
+    `;
+
+    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+    
+    try {
+      await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message,
+          parse_mode: 'Markdown'
+        })
+      });
+      console.log("تم إرسال إشعار التليجرام بنجاح!");
+    } catch (error) {
+      console.error("خطأ في إرسال إشعار التليجرام:", error);
+    }
+  };
+
   const handleCheckoutSubmit = async (e) => {
     e.preventDefault();
     
@@ -187,8 +237,12 @@ export default function App() {
         status: 'pending'
       };
 
+      // 1. تسجيل الطلب في قاعدة البيانات
       const { error } = await supabase.from('orders').insert([orderData]);
       if (error) throw error;
+
+      // 2. إرسال الإشعار إلى بوت التليجرام
+      await sendTelegramNotification(orderData);
 
       if (appliedCoupon && appliedCoupon.is_auto_generated) {
         await supabase.from('coupons').update({ is_used: true }).eq('id', appliedCoupon.id);
